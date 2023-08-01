@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+    shadowsocks:
+        image: 'ghcr.io/shadowsocks/ssserver-rust:latest'
+        tty: true
+        stdin_open: true
+        volumes:
+            - './shadowsocks-rust/config.json:/etc/shadowsocks-rust/config.json'
+        ports:
+            - '8388:8388/udp'
+            - '8388:8388/tcp'
+        restart: always
+        container_name: ssserver-rust
+        networks:
+            ss-network:
+                ipv4_address: 173.25.0.100
+                ipv6_address: 2002:3990:3990::99
+networks:
+    ss-network:
+        enable_ipv6: true
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 173.25.0.0/16
+                - subnet: 2002:3990:3990::/64
+                  gateway: 2002:3990:3990::1
